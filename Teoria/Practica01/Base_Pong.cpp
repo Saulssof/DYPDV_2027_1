@@ -7,9 +7,9 @@
 
 #define PI 3.1415926535898 
 
-double xpos, ypos, ydir, xdir;         // x and y position for house to be drawn
-double sx, sy, squash;                 // xy scale factors
-double rot, rdir;                      // rotation
+double xpos, ypos, ydir, xdir;
+double sx, sy, squash;
+double rot, rdir;
 double ball_speed;
 
 double posicion_paleta1, posicion_paleta2;
@@ -56,17 +56,20 @@ void draw_ball() {
 
 // Dibujar las dos paletas
 void dibujar_paletas() {
-  glColor3f(0.,0.,0.);
 
   glBegin(GL_QUADS);
 
-  // Paleta izquierda
+  // Paleta izquierda - amarillo/naranja
+  glColor3f(1.0, 0.6, 0.0);
+
   glVertex2f(10., posicion_paleta1 - 20.);
   glVertex2f(15., posicion_paleta1 - 20.);
   glVertex2f(15., posicion_paleta1 + 20.);
   glVertex2f(10., posicion_paleta1 + 20.);
 
-  // Paleta derecha
+  // Paleta derecha - rojo
+  glColor3f(1.0, 0.0, 0.0);
+
   glVertex2f(145., posicion_paleta2 - 20.);
   glVertex2f(150., posicion_paleta2 - 20.);
   glVertex2f(150., posicion_paleta2 + 20.);
@@ -95,24 +98,18 @@ void teclado(unsigned char key, int x, int y)
 
 void Display(void)
 {
-  // swap the buffers
   glutSwapBuffers(); 
 
-  //clear all pixels with the specified clear color
   glClear(GL_COLOR_BUFFER_BIT);
-
-  // 160 is max X value in our world
 
   // Shape has hit the ground! Stop moving and start squashing down and then back up 
   if (ypos == RadiusOfBall && ydir == -1  ) { 
     sy = sy*squash ; 
 
     if (sy < 0.8)
-      // reached maximum suqash, now unsquash back up 
       squash = 1.1;
 
     else if (sy > 1.) {
-      // reset squash parameters and bounce ball back upwards
       sy = 1.;
       squash = 0.9;
       ydir = 1;
@@ -120,32 +117,19 @@ void Display(void)
 
     sx = 1./sy;
 
-    // 120 is max Y value in our world
   } else {
 
-    // set Y position to increment 1.5 times the direction of the bounce
     ypos += ydir*ball_speed;
 
-    // If ball touches the top, change direction of ball downwards
     if (ypos == 120-RadiusOfBall){
       ydir = -1;
     }
 
-    // If ball touches the bottom, change direction of ball upwards
     else if (ypos < RadiusOfBall)
       ydir = 1;
   }
 
-  /*  //reset transformation state 
-  glLoadIdentity();
-  glTranslatef(xpos,ypos, 0.);
-  glTranslatef(0.,-RadiusOfBall, 0.);
-  glScalef(sx,sy, 1.);
-  glTranslatef(0.,RadiusOfBall, 0.);
-  draw_ball();
-  */
-
-  //Translate the bouncing ball to its new position
+  // Translate the bouncing ball to its new position
   T[12]= xpos;
   T[13] = ypos;
   glLoadMatrixf(T);
@@ -182,7 +166,9 @@ void reshape (int w, int h)
 }
 
 void init(void){
-  glClearColor(0.0,0.8,0.0,1.0);
+
+  // Fondo azul oscuro
+  glClearColor(0.02,0.03,0.10,1.0);
 
   xpos = 80;
   ypos = RadiusOfBall;
