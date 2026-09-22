@@ -98,8 +98,10 @@ void teclado(unsigned char key, int x, int y)
 
 void Display(void)
 {
+  // swap the buffers
   glutSwapBuffers(); 
 
+  //clear all pixels with the specified clear color
   glClear(GL_COLOR_BUFFER_BIT);
 
   // Shape has hit the ground! Stop moving and start squashing down and then back up 
@@ -107,9 +109,11 @@ void Display(void)
     sy = sy*squash ; 
 
     if (sy < 0.8)
+      // reached maximum suqash, now unsquash back up 
       squash = 1.1;
 
     else if (sy > 1.) {
+      // reset squash parameters and bounce ball back upwards
       sy = 1.;
       squash = 0.9;
       ydir = 1;
@@ -119,14 +123,43 @@ void Display(void)
 
   } else {
 
+    // Movimiento vertical
     ypos += ydir*ball_speed;
 
-    if (ypos == 120-RadiusOfBall){
+    // Movimiento horizontal
+    xpos += xdir*ball_speed;
+
+    // Si toca la parte superior, cambia dirección hacia abajo
+    if (ypos >= 120-RadiusOfBall){
       ydir = -1;
     }
 
-    else if (ypos < RadiusOfBall)
+    // Si toca la parte inferior, cambia dirección hacia arriba
+    else if (ypos <= RadiusOfBall){
       ydir = 1;
+    }
+
+    // Colisión con la paleta izquierda
+    if (xdir < 0 &&
+        xpos - RadiusOfBall <= 15. &&
+        xpos + RadiusOfBall >= 10. &&
+        ypos >= posicion_paleta1 - 20. &&
+        ypos <= posicion_paleta1 + 20.) {
+
+      xdir = 1;
+      xpos = 15. + RadiusOfBall;
+    }
+
+    // Colisión con la paleta derecha
+    if (xdir > 0 &&
+        xpos + RadiusOfBall >= 145. &&
+        xpos - RadiusOfBall <= 150. &&
+        ypos >= posicion_paleta2 - 20. &&
+        ypos <= posicion_paleta2 + 20.) {
+
+      xdir = -1;
+      xpos = 145. - RadiusOfBall;
+    }
   }
 
   // Translate the bouncing ball to its new position
@@ -172,6 +205,7 @@ void init(void){
 
   xpos = 80;
   ypos = RadiusOfBall;
+
   xdir = 1;
   ydir = 1;
 
