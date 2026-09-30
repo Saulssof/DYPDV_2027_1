@@ -10,7 +10,7 @@ La práctica implementa un jugador capaz de moverse, saltar y correr, además de
 ## Verificación
 Para probar la práctica:
 1. Abrir la escena en Unity.
-2. Presionar **Play (▶)**.
+2. Presionar Play.
 3. Mover al jugador con **WASD**.
 4. Empujar los cubos para comprobar su interacción física.
 5. Tocar un `PickupItem` y verificar que desaparezca.
